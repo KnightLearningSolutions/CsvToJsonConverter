@@ -28,8 +28,8 @@ public class ConversionClass{
 	
 	String csvFileName;
 	String jsonFileName;
-	String databasePath ="/home/kls103/Desktop/csvtojsonconverter/csvs/";
-	String outputFolderPath="/home/kls103/Desktop/csvtojsonconverter/jsons/";
+	String databasePath =System.getProperty("user.dir")+ File.separator+"csvs/";
+	String outputFolderPath=System.getProperty("user.dir")+ File.separator+"jsons/";
 	String line;
 	String cvsSplitBy = ",";
 	ConversionClass conversionObj;

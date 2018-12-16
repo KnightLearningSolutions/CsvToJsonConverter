@@ -24,7 +24,7 @@ import org.apache.log4j.PropertyConfigurator;
 public class CsvValidatorClass{
 
 	String csvFileName;
-	String databasePath ="/home/kls103/Desktop/csvtojsonconverter/csvs/";
+	String databasePath = System.getProperty("user.dir")+ File.separator+"csvs/";
 	String line;
 	String acceptableExtension = "csv";
 	BufferedReader br;

@@ -19,7 +19,7 @@ import org.apache.log4j.PropertyConfigurator;
 
 public class JsonValidatorClass{
 	
-	String outputFolderPath="/home/kls103/Desktop/csvtojsonconverter/jsons/";
+	String outputFolderPath= System.getProperty("user.dir")+ File.separator+"jsons/";
 	String jsonFileName;
 	String convertAcceptExtension = "json";
 	JsonValidatorClass currentobj;
