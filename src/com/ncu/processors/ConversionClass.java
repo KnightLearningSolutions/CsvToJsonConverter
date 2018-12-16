@@ -51,16 +51,15 @@ public class ConversionClass{
 		
 		try{
 			// Asking last permission to convert file
-			    logger.info("Do You Want To Convert Csv data into Json Plz Press y/n :-");
+			    logger.info("Do You Want To Convert This Csv data into Json ..? Please Press y/n :-");
 
 			    Scanner perobject = new Scanner(System.in);
 			    String takePermission = perobject.nextLine();
 			    if(permissionValue.equalsIgnoreCase(takePermission)){
 
 		    // display before file convert 
-                logger.info("\n \n");
-				logger.info("-------------- Time Duration --------------------");
-				logger.info("Before Process Time :- "+new Date( ) + "\n");
+				logger.info("-------------------------- Time Duration --------------------------");
+				logger.info("Time Before Process :- "+new Date( ));
 				long start = System.currentTimeMillis( );
 
 			// Reading file from directory by using BufferedReader
@@ -87,12 +86,11 @@ public class ConversionClass{
 					logger.error("Format of this Csv file is not valid plz try other csv file.....Plz try Again !");
 		            return false;
 				}
-                logger.info("\n \n");
-				logger.info("After Process Time :- "+new Date( ) + "\n");
+				logger.info("Time After Process :- "+new Date( ));
 				long end = System.currentTimeMillis( );
 				long diff = end - start;
-				logger.info("Duration In Mili Second -: " + diff);
-				logger.info("\n \n");
+				logger.info("Duration In MilliSecond -: " + diff+"ms");
+				logger.info("-----------------------------------------------------------------");
 			}else{
 				return false;
 			}
@@ -101,8 +99,8 @@ public class ConversionClass{
 			logger.info("Internal Problem  Occurred Please Try Again..... !"+e+"\n"+"\n");
 			return false;
 		}
-		logger.info("___!Successfully Convert File Into Json - (*.*)"+"\n");
-		logger.info("'Notice' - You Can Get Your "+this.jsonFileName+" On Path - "+"'"+outputFolderPath+"'"+"\n");
+		logger.info("______! Successfully Converted This File Into Json - (*.*)");
+		logger.info("\n \n 'Notice' - You Can Get Your "+this.jsonFileName+" On Path - "+"'"+outputFolderPath+"'"+"\n\n");
 		return true;
 	}
 

@@ -13,9 +13,12 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.File; 
+import java.io.FileInputStream;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import java.io.InputStream;
+import java.util.Properties;
 
 public class JsonValidatorClass{
 	
@@ -23,14 +26,16 @@ public class JsonValidatorClass{
 	String jsonFileName;
 	String convertAcceptExtension = "json";
 	JsonValidatorClass currentobj;
+	Properties prop = new Properties();
+	InputStream input = null;
+	String configMessages = System.getProperty("user.dir")+ File.separator + "configs/constants/exceptions.properties";
 
 	/* method to check all validation of json file  */
 
 	public boolean jsonValidatorMethod(String takejsonFileName)
 	{   
 		Logger logger = Logger.getLogger(JsonValidatorClass.class);
-		String log4jConfigFile = System.getProperty("user.dir")
-		+ File.separator + "configs/logger/logger.properties";
+		String log4jConfigFile = System.getProperty("user.dir")+ File.separator + "configs/logger/logger.properties";
 		BasicConfigurator.configure();
 		PropertyConfigurator.configure(log4jConfigFile);
 		
@@ -39,6 +44,10 @@ public class JsonValidatorClass{
 		objvalid.jsonFileName=takejsonFileName;
 
 		try{
+
+			input = new FileInputStream(configMessages);
+		// load a properties file
+			prop.load(input);
 
 		// Generate "EmptyNameException" Exception if gives blank space as a file name
 			objvalid.empltyFileMethod(jsonFileName);
@@ -60,32 +69,35 @@ public class JsonValidatorClass{
 			Boolean fileExists= new File(outputFolderPath+jsonFileName).exists();
 			if(fileExists)
 			{   
-				logger.error("\n \n Oops.. This File Is Already Exist Into Directory , Please Try With Different Name...!\n");
-
-				// System.out.print("\n Oops.. This File Is Already Exist Into Directory , Please Try With Different Name...!\n");
+				logger.error("Oops.. This File Is Already Exist Into Directory , Please Try With Different Name...!\n");
 				return false;
 			}
 			
 		}
 
         // All Excetion will taken in this section 
+        catch(EmptyNameException e){
+			logger.error("\n \n"+e+prop.getProperty("emptyNameMessage")+"\n");
+			return false;
+		}
+        
+        catch(FileFormatException e){
+			logger.error("\n \n"+e+prop.getProperty("notDotJsonFormat")+"\n");
+			return false;
+		}
 
 		catch(InvalidFileException e){
-			logger.error("\n"+e+"\n"+"\n");
+			logger.error("\n \n"+e+prop.getProperty("invalidJsonExtension")+"\n");
+			return false;
+		}
+        
+        catch(FileNameLengthException e){
+			logger.error("\n \n"+e+prop.getProperty("longFileNameMessage")+"\n");
 			return false;
 		}
 
-		catch(FileFormatException e){
-			logger.error("\n"+e+"\n"+"\n");
-			return false;
-		}
-
-		catch(EmptyNameException e){
-			logger.error("\n"+e+"\n"+"\n");
-			return false;
-		}
 		catch(Exception e){
-			logger.error("\n"+e+"\n"+"\n");
+			logger.error("\n \n"+e+"\n");
 			return false;
 		}
 
@@ -96,7 +108,7 @@ public class JsonValidatorClass{
 
 	private void empltyFileMethod(String jsonFileName) throws EmptyNameException {
 		if (jsonFileName == null || jsonFileName.trim().isEmpty()) {
-			throw new EmptyNameException("Oops.. Sorry Empty Filename Is Not Acceptable .....!");
+			throw new EmptyNameException("");
 		}
 	}
 
@@ -105,14 +117,14 @@ public class JsonValidatorClass{
 		Matcher costMatcher = costPattern.matcher(jsonFileName);
 		Boolean value = costMatcher.find();
 		if(!value){
-			throw new FileFormatException("Oops.. Extension Is Messing .You Should Also Give .json Extension .....!");
+			throw new FileFormatException("");
 		}
 	}
 
 	private void dotMessingMethod(String jsonFileName) throws InvalidFileException {
 		String [] haveExtenstion= jsonFileName.split("\\.");
 		if (haveExtenstion.length<=1) {
-			throw new InvalidFileException("Sorry this is not json file ! This System Accept Only json file");
+			throw new InvalidFileException("");
 		}
 	}
 
@@ -120,14 +132,14 @@ public class JsonValidatorClass{
 		String name = jsonFileName.split("\\.")[0];
 		String currentExtension = jsonFileName.split("\\.")[1];
 		if(!this.convertAcceptExtension.equals(currentExtension)){
-			throw new InvalidFileException("Sorry this is not json file ! This System Accept Only json file");
+			throw new InvalidFileException("");
 		}
 	}
 
 	private void lengthMethod(String jsonFileName) throws FileNameLengthException {
 		String namelength = jsonFileName.split("\\.")[0];
 		if(namelength.length()>25){
-			throw new FileNameLengthException("you have Given Long File Name .This System Accept Only Less Than 25 Characters To File Name");
+			throw new FileNameLengthException("");
 		}
 	}
 }

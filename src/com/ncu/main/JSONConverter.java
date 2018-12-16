@@ -49,7 +49,7 @@ public class JSONConverter{
         BasicConfigurator.configure();
         PropertyConfigurator.configure(log4jConfigFile);
         Scanner sc = new Scanner(System.in);
-        logger.info("Hii..(*.*) Please Enter Your Csv File Name __:- ");
+        logger.info(" !...(*.*) Please Enter Your Csv File Name __:- ");
 
         String filename = sc.nextLine();
         String trimedFile = filename.trim();
@@ -84,7 +84,7 @@ public class JSONConverter{
         PropertyConfigurator.configure(log4jConfigFile);
 
         Scanner sc = new Scanner(System.in);
-        logger.info("!... What Will Be Your Converted File Name, Please Enter__:- ");
+        logger.info("!...(*.*) What Will Be Your Converted File Name, Please Enter__:- ");
         String jFilename = sc.nextLine();
         String trimedFile = jFilename.trim();
         String jsonFileName = trimedFile.toLowerCase();
@@ -116,7 +116,6 @@ public class JSONConverter{
       BasicConfigurator.configure();
       PropertyConfigurator.configure(log4jConfigFile);
       Scanner sc = new Scanner(System.in);
-      logger.info("\n \n");
       logger.info("Do You Want Exit . Please Press - exit ");
       logger.info("Or Press Any Key To Continue Program - ");
       Scanner eobject = new Scanner(System.in);

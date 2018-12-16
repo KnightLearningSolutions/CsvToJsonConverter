@@ -14,6 +14,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.FileWriter; 
 import java.io.File; 
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.Properties;
 import java.util.Scanner; 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,6 +34,9 @@ public class CsvValidatorClass{
 	String cvsSplitBy = ",";
 	CsvValidatorClass object;
 	String permissionValue="y";
+	String configMessages = System.getProperty("user.dir")+ File.separator + "configs/constants/exceptions.properties";
+	Properties prop = new Properties();
+	InputStream input = null;
 
 	/* method to check all validation of csv file  */
 
@@ -38,8 +44,7 @@ public class CsvValidatorClass{
 	{   
 		
 		Logger logger = Logger.getLogger(CsvValidatorClass.class);
-		String log4jConfigFile = System.getProperty("user.dir")
-		+ File.separator + "configs/logger/logger.properties";
+		String log4jConfigFile = System.getProperty("user.dir")+ File.separator + "configs/logger/logger.properties";
 		BasicConfigurator.configure();
 		PropertyConfigurator.configure(log4jConfigFile);
 
@@ -47,6 +52,10 @@ public class CsvValidatorClass{
 		CsvValidatorClass object=new CsvValidatorClass();
 		object.csvFileName=csvFileName;
 		try{
+
+			input = new FileInputStream(configMessages);
+		// load a properties file
+			prop.load(input);
 
         // Generate "EmptyNameException" Exception if gives blank space as a file name
 			object.empltyFileNameMethod(csvFileName);
@@ -70,19 +79,24 @@ public class CsvValidatorClass{
 		}
 
         // All Excetion will taken in this section 
-		
+		catch(EmptyNameException e){
+
+			logger.error("\n \n"+e+prop.getProperty("emptyNameMessage")+"\n");
+			return false;
+		}
+
 		catch(FileFormatException e){
 
-			logger.error("\n"+e+"\n"+"\n");
+			logger.error("\n \n"+e+prop.getProperty("extensionMessage")+"\n");
 			return false;
 		}
 
 		catch(InvalidFileException e){
-			logger.error("\n"+e+"\n"+"\n");
+			logger.error("\n \n"+e+prop.getProperty("notCsvMessage")+"\n");
 			return false;
 		}
 		catch(FileNameLengthException e){
-			logger.error("\n"+e+"\n"+"\n");
+			logger.error("\n \n"+e+prop.getProperty("longFileNameMessage")+"\n");
 			return false;
 		}
 
@@ -91,6 +105,7 @@ public class CsvValidatorClass{
 			fileShowObj.showAllFiles(e);
 			return false;
 		}
+
 		catch(Exception e){
 			logger.error("\n"+e+"\n"+"\n");
 			return false;
@@ -101,9 +116,9 @@ public class CsvValidatorClass{
 
 	/* Generate "EmptyNameException" Exception if gives blank space as a file name  */
 
-	private void empltyFileNameMethod(String csvFileName) throws EmptyNameException {
+	private void empltyFileNameMethod(String csvFileName) throws EmptyNameException {	
 		if (csvFileName == null || csvFileName.trim().isEmpty()) {
-			throw new EmptyNameException("Oops.. Sorry Empty Filename Is Not Acceptable .....!");
+			throw new EmptyNameException("");
 		}
 	}
 
@@ -114,7 +129,7 @@ public class CsvValidatorClass{
 		Matcher costMatcher = costPattern.matcher(csvFileName);
 		boolean value = costMatcher.find();
 		if(!value){
-			throw new FileFormatException("Oops.. Extension Is Messing .You Should Also Give .csv Extension .....!");
+			throw new FileFormatException("");
 		}
 	}
 
@@ -123,7 +138,7 @@ public class CsvValidatorClass{
 	private void fileFormatMethod(String csvFileName) throws InvalidFileException {
 		String [] haveExtenstion= csvFileName.split("\\.");
 		if (haveExtenstion.length<=1) {
-			throw new InvalidFileException("Sorry this is not csv file ! This System Accept Only Csv file");
+			throw new InvalidFileException("");
 		}
 
 	}
@@ -134,7 +149,7 @@ public class CsvValidatorClass{
 		String name = csvFileName.split("\\.")[0];
 		String currentExtension = csvFileName.split("\\.")[1];
 		if(!this.acceptableExtension.equals(currentExtension)){
-			throw new InvalidFileException("Sorry this is not csv file ! This System Accept Only Csv file");
+			throw new InvalidFileException("");
 		}
 	}
 
@@ -143,7 +158,7 @@ public class CsvValidatorClass{
 	private void fileLengthMethod(String csvFileName) throws FileNameLengthException {
 		String namelength = csvFileName.split("\\.")[0];
 		if(namelength.length()>25){
-			throw new FileNameLengthException("you have Given Long File Name .This System Accept Only Less Than 14 Characters To File Name");
+			throw new FileNameLengthException("");
 		}
 	}
 
@@ -151,7 +166,7 @@ public class CsvValidatorClass{
 
 	private void fileNotAvailableMethod(String csvFileName) throws FileNotAvailable {
 		if(!new File(databasePath+csvFileName).exists()){
-			throw new FileNotAvailable("Sorry "+csvFileName+" Is File Is Not Available Into Our Directory");
+			throw new FileNotAvailable("");
 		}
 		
 	}
@@ -161,26 +176,32 @@ public class CsvValidatorClass{
 	public void showAllFiles(Exception expObj){ 
 
 		Logger logger = Logger.getLogger(CsvValidatorClass.class);
-		String log4jConfigFile = System.getProperty("user.dir")
-		+ File.separator + "configs/logger/logger.properties";
+		String log4jConfigFile = System.getProperty("user.dir")+ File.separator + "configs/logger/logger.properties";
 		BasicConfigurator.configure();
-		PropertyConfigurator.configure(log4jConfigFile); 
+		PropertyConfigurator.configure(log4jConfigFile);
 
-		logger.info(expObj+"\n"+"\n");
-		logger.info("\n \n Do You Want To See List Of Available csv file Press - y/n  ");
-
+		try{
+			input = new FileInputStream(configMessages);
+			prop.load(input);
+			logger.info("\n \n"+expObj+prop.getProperty("notAvailableMessage")+"\n");
+			logger.info("Do You Want To See List Of Available csv file Press - y/n  ");
+		}catch(Exception e)
+		{
+			logger.error(e);
+		}
+		
 		Scanner sobject = new Scanner(System.in);
 		String permission = sobject.nextLine();
-		
 
 		if(permissionValue.equalsIgnoreCase(permission)){
 			File file = new File(databasePath);
-			logger.info("\n"+"\n"+"----- All Available Files In Directory ---- ");
+			logger.info("----------- All Available Files In Directory --------- ");
 
 			File[] files = file.listFiles();
 			for(File f: files){
 				logger.info("-"+f.getName());
 			}
+			logger.info("------------------------------------------------------ ");
 		}
 	}
 }
