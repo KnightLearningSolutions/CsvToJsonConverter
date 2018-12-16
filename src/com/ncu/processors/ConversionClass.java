@@ -7,7 +7,7 @@
 * @since   2018-12-15 
 */
 
-package com.ncu.processes;
+package com.ncu.processors;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

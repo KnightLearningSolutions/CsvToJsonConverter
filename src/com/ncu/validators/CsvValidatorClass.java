@@ -6,7 +6,7 @@
 * @since   2018-12-15 
 */
 
-package com.ncu.validations;
+package com.ncu.validators;
 import com.ncu.exceptions.*;
 
 import java.io.BufferedReader;

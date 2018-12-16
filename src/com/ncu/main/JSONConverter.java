@@ -8,8 +8,8 @@
 */
 
 package com.ncu.main;
-import com.ncu.validations.*;
-import com.ncu.processes.*;
+import com.ncu.validators.*;
+import com.ncu.processors.*;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
