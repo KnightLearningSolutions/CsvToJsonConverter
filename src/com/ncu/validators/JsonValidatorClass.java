@@ -29,7 +29,10 @@ public class JsonValidatorClass{
 	Properties prop = new Properties();
 	InputStream input = null;
 	String configMessages = System.getProperty("user.dir")+ File.separator + "configs/constants/exceptions.properties";
-
+    int fileLength;
+	String RegexValue;
+	String configValidation = System.getProperty("user.dir")+ File.separator + "configs/constants/constants.properties";
+    
 	/* method to check all validation of json file  */
 
 	public boolean jsonValidatorMethod(String takejsonFileName)
@@ -61,6 +64,9 @@ public class JsonValidatorClass{
         // Generate "InvalidFileException" Exception if user give other then csv file extension. 
 			objvalid.invalidFileMethod(jsonFileName);
 
+        // Generate "SpecialCharacterException" Exception if user does not . before extension
+			objvalid.specialCharacterMethod(jsonFileName);
+
         // Generate "FileNameLengthException" Exception if user more then 25 character as a file name .
 			objvalid.lengthMethod(jsonFileName);
 
@@ -88,6 +94,11 @@ public class JsonValidatorClass{
 
 		catch(InvalidFileException e){
 			logger.error("\n \n"+e+prop.getProperty("invalidJsonExtension")+"\n");
+			return false;
+		}
+
+		catch(SpecialCharacterException e){
+			logger.error("\n \n"+e+prop.getProperty("specialcharacterMessage")+"\n");
 			return false;
 		}
         
@@ -136,9 +147,40 @@ public class JsonValidatorClass{
 		}
 	}
 
+	private void specialCharacterMethod(String jsonFileName) throws SpecialCharacterException{
+		String nameGet = jsonFileName.split("\\.")[0];
+		try{
+		FileInputStream validSet = new FileInputStream(configValidation);
+		Properties propSetvalue = new Properties();
+	    propSetvalue.load(validSet);
+	    String regexValue = propSetvalue.getProperty("fileRegex");
+	    this.RegexValue=regexValue;
+	    }catch(Exception e)
+	    {
+	    	System.out.println(e);
+	    }
+	    Pattern  patternGet = Pattern.compile("["+this.RegexValue+"]");
+		Matcher check = patternGet.matcher(nameGet);
+		boolean finalValue = check.find();
+        if (finalValue == true){
+           throw new SpecialCharacterException("");
+         }
+	}
+
 	private void lengthMethod(String jsonFileName) throws FileNameLengthException {
+         try{
+		FileInputStream validationSet = new FileInputStream(configValidation);
+		Properties propSet = new Properties();
+	    propSet.load(validationSet);
+	    String lengthValue = propSet.getProperty("fileNameLength");
+	    int getLength=Integer.parseInt(lengthValue); 
+	    this.fileLength=getLength;
+	    }catch(Exception e)
+	    {
+	    	System.out.println(e);
+	    }
 		String namelength = jsonFileName.split("\\.")[0];
-		if(namelength.length()>25){
+		if(namelength.length()>this.fileLength){
 			throw new FileNameLengthException("");
 		}
 	}

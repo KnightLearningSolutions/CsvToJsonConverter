@@ -116,8 +116,8 @@ public class JSONConverter{
       BasicConfigurator.configure();
       PropertyConfigurator.configure(log4jConfigFile);
       Scanner sc = new Scanner(System.in);
-      logger.info("Do You Want Exit . Please Press - exit ");
-      logger.info("Or Press Any Key To Continue Program - ");
+      logger.info("Do You Want Exit . Please Write - exit ");
+      logger.info("Or Write Any Key To Continue Program - ");
       Scanner eobject = new Scanner(System.in);
       String permissionExit = eobject.nextLine();
       if(exitValue.equalsIgnoreCase(permissionExit)){
