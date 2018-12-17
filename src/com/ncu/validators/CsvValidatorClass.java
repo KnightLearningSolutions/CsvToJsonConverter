@@ -37,7 +37,10 @@ public class CsvValidatorClass{
 	String configMessages = System.getProperty("user.dir")+ File.separator + "configs/constants/exceptions.properties";
 	Properties prop = new Properties();
 	InputStream input = null;
-
+	int fileLength;
+	String RegexValue;
+	String configValidation = System.getProperty("user.dir")+ File.separator + "configs/constants/constants.properties";
+    
 	/* method to check all validation of csv file  */
 
 	public boolean validatorMethod(String csvFileName)
@@ -65,6 +68,9 @@ public class CsvValidatorClass{
 
 		// Generate "InvalidFileException" Exception if user does not give any extension after file name. 
 			object.fileFormatMethod(csvFileName);
+
+		// Generate "SpecialCharacterException" Exception if user does not . before extension
+			object.specialCharacterMethod(csvFileName);
 			
 		// Generate "InvalidFileException" Exception if user give other then csv file extension. 
 			object.acceptOnlyCsvMethod(csvFileName);
@@ -95,8 +101,14 @@ public class CsvValidatorClass{
 			logger.error("\n \n"+e+prop.getProperty("notCsvMessage")+"\n");
 			return false;
 		}
-		catch(FileNameLengthException e){
+        
+        catch(FileNameLengthException e){
 			logger.error("\n \n"+e+prop.getProperty("longFileNameMessage")+"\n");
+			return false;
+		}
+
+		catch(SpecialCharacterException e){
+			logger.error("\n \n"+e+prop.getProperty("specialcharacterMessage")+"\n");
 			return false;
 		}
 
@@ -143,6 +155,26 @@ public class CsvValidatorClass{
 
 	}
 
+	private void specialCharacterMethod(String csvFileName) throws SpecialCharacterException{
+		String nameGet = csvFileName.split("\\.")[0];
+		try{
+		FileInputStream validSet = new FileInputStream(configValidation);
+		Properties propSetvalue = new Properties();
+	    propSetvalue.load(validSet);
+	    String regexValue = propSetvalue.getProperty("fileRegex");
+	    this.RegexValue=regexValue;
+	    }catch(Exception e)
+	    {
+	    	System.out.println(e);
+	    }
+	    Pattern  patternGet = Pattern.compile("["+this.RegexValue+"]");
+		Matcher check = patternGet.matcher(nameGet);
+		boolean finalValue = check.find();
+        if (finalValue == true){
+           throw new SpecialCharacterException("");
+         }
+	}
+
 	/* Generate "InvalidFileException" Exception if user give other then csv file extension. */
 
 	private void acceptOnlyCsvMethod(String csvFileName) throws InvalidFileException {
@@ -156,8 +188,19 @@ public class CsvValidatorClass{
 	/* Generate "FileNameLengthException" Exception if user more then 25 character as a file name . */
 
 	private void fileLengthMethod(String csvFileName) throws FileNameLengthException {
+		try{
+		FileInputStream validationSet = new FileInputStream(configValidation);
+		Properties propSet = new Properties();
+	    propSet.load(validationSet);
+	    String lengthValue = propSet.getProperty("fileNameLength");
+	    int getLength=Integer.parseInt(lengthValue); 
+	    this.fileLength=getLength;
+	    }catch(Exception e)
+	    {
+	    	System.out.println(e);
+	    }
 		String namelength = csvFileName.split("\\.")[0];
-		if(namelength.length()>25){
+		if(namelength.length()>this.fileLength){
 			throw new FileNameLengthException("");
 		}
 	}
