@@ -1,5 +1,5 @@
 /**
-* The InvalidFileException class which generate    
+* The InvalidExtensionException class which generate    
 * exception if user given file name extension is not csv
 *
 * @author  knight Learning Solutions
@@ -9,8 +9,8 @@
 
 package com.ncu.exceptions;
 
-public class InvalidFileException extends Exception{  
- public InvalidFileException(String s){  
+public class InvalidExtensionException extends Exception{  
+ public InvalidExtensionException(String s){  
   super(s);  
  }  
 }  

@@ -1,6 +1,6 @@
 /**
-* The EmptyExtensionException class which generate    
-* exception if user will not give extension
+* The EmptyExtensionException class is used to generate    
+* exception for missing file extension
 *
 * @author  knight Learning Solutions
 * @version 1.0

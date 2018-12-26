@@ -1,6 +1,6 @@
 /**
-* The EmptyNameException class which generate    
-* exception if user will give space instead of file name
+* The EmptyNameException class is used to generate    
+* exception for empty file name
 *
 * @author  knight Learning Solutions
 * @version 1.0

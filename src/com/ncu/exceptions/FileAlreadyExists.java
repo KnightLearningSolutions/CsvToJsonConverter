@@ -1,5 +1,5 @@
 /**
-* The FileNotAvailable class which generate    
+* The FileAlreadyExists class which generate    
 * exception if file with user given file name, is not available into directory
 *
 * @author  knight Learning Solutions
@@ -9,8 +9,8 @@
 
 package com.ncu.exceptions;
 
-public class FileNotAvailable extends Exception{  
- public FileNotAvailable(String s){  
+public class FileAlreadyExists extends Exception{  
+ public FileAlreadyExists(String s){  
   super(s);  
  }  
 }  

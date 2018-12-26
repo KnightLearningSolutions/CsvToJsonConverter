@@ -1,6 +1,6 @@
 /**
 * The SpecialCharacterException class which generate    
-* exception if user will not give any special character into string name
+* exception if user will give any special character in file name
 *
 * @author  knight Learning Solutions
 * @version 1.0
